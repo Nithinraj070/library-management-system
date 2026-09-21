@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}
+Fines
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <h1>
+        Fine Management
+    </h1>
+
+</div>
+
+
+<div class="table-wrapper">
+
+<table>
+
+    <thead>
+
+        <tr>
+
+            <th>
+                Fine ID
+            </th>
+
+            <th>
+                Borrow ID
+            </th>
+
+            <th>
+                Student
+            </th>
+
+            <th>
+                Book
+            </th>
+
+            <th>
+                Amount
+            </th>
+
+            <th>
+                Status
+            </th>
+
+            <th>
+                Action
+            </th>
+
+        </tr>
+
+    </thead>
+
+
+    <tbody>
+
+    {% for fine in fines %}
+
+        <tr>
+
+            <td>
+                {{ fine.Fine_ID }}
+            </td>
+
+            <td>
+                {{ fine.Borrow_ID }}
+            </td>
+
+            <td>
+                {{ fine.Student_Name }}
+            </td>
+
+            <td>
+                {{ fine.Book_Title }}
+            </td>
+
+            <td>
+                ₹{{ fine.Amount }}
+            </td>
+
+            <td>
+
+                {% if fine.Paid_Status == "Paid" %}
+
+                    <span class="status-returned">
+                        Paid
+                    </span>
+
+                {% else %}
+
+                    <span class="status-borrowed">
+                        Unpaid
+                    </span>
+
+                {% endif %}
+
+            </td>
+
+            <td>
+
+                {% if fine.Paid_Status == "Unpaid" %}
+
+                    <form
+                        method="POST"
+                        action="{{ url_for(
+                            'pay_fine',
+                            fine_id=fine.Fine_ID
+                        ) }}"
+                    >
+
+                        <button type="submit">
+                            Mark Paid
+                        </button>
+
+                    </form>
+
+                {% else %}
+
+                    -
+
+                {% endif %}
+
+            </td>
+
+        </tr>
+
+    {% else %}
+
+        <tr>
+
+            <td
+                colspan="7"
+                class="empty-state"
+            >
+                No fines recorded.
+            </td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

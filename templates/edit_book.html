@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Book
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <h1>
+        Edit Book
+    </h1>
+
+</div>
+
+
+<form
+    method="POST"
+    class="book-form"
+>
+
+    <label>
+        Title
+    </label>
+
+    <input
+        type="text"
+        name="title"
+        value="{{ book.Title }}"
+        required
+    >
+
+
+    <label>
+        Author
+    </label>
+
+    <input
+        type="text"
+        name="author"
+        value="{{ book.Author }}"
+        required
+    >
+
+
+    <label>
+        Category
+    </label>
+
+    <input
+        type="text"
+        name="category"
+        value="{{ book.Category or '' }}"
+    >
+
+
+    <label>
+        Publisher
+    </label>
+
+    <input
+        type="text"
+        name="publisher"
+        value="{{ book.Publisher or '' }}"
+    >
+
+
+    <label>
+        ISBN
+    </label>
+
+    <input
+        type="text"
+        name="isbn"
+        value="{{ book.ISBN or '' }}"
+    >
+
+
+    <label>
+        Total Quantity
+    </label>
+
+    <input
+        type="number"
+        name="quantity"
+        value="{{ book.Quantity }}"
+        min="1"
+        required
+    >
+
+
+    <p class="form-note">
+        Available quantity is calculated automatically
+        based on currently borrowed copies.
+    </p>
+
+
+    <button type="submit">
+        Update Book
+    </button>
+
+</form>
+
+{% endblock %}

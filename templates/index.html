@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h1>
+            Library Dashboard
+        </h1>
+
+        <p class="dashboard-intro">
+            Overview of books, members and current library activity.
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="stats">
+
+    <div class="stat-card">
+
+        <h3>
+            Total Books
+        </h3>
+
+        <p>
+            {{ total_books }}
+        </p>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <h3>
+            Total Members
+        </h3>
+
+        <p>
+            {{ total_students }}
+        </p>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <h3>
+            Active Borrowings
+        </h3>
+
+        <p>
+            {{ active_borrows }}
+        </p>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <h3>
+            Overdue Books
+        </h3>
+
+        <p>
+            {{ overdue_count }}
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="quick-section">
+
+    <h2>
+        Quick Actions
+    </h2>
+
+    <div class="actions">
+
+        <a
+            class="button"
+            href="{{ url_for('books') }}"
+        >
+            Manage Books
+        </a>
+
+        <a
+            class="button"
+            href="{{ url_for('add_book') }}"
+        >
+            + Add Book
+        </a>
+
+        <a
+            class="button"
+            href="{{ url_for('add_member') }}"
+        >
+            + Add Member
+        </a>
+
+        <a
+            class="button"
+            href="{{ url_for('borrow') }}"
+        >
+            Issue / Return
+        </a>
+
+        <a
+            class="button"
+            href="{{ url_for('overdue') }}"
+        >
+            Overdue
+        </a>
+
+        <a
+            class="button"
+            href="{{ url_for('reservations') }}"
+        >
+            Reservations
+        </a>
+
+    </div>
+
+</div>
+
+
+<div class="records-section">
+
+    <h2>
+        Recent Borrowing Activity
+    </h2>
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        ID
+                    </th>
+
+                    <th>
+                        Student
+                    </th>
+
+                    <th>
+                        Book
+                    </th>
+
+                    <th>
+                        Issue Date
+                    </th>
+
+                    <th>
+                        Due Date
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for record in recent_borrows %}
+
+                <tr>
+
+                    <td>
+                        {{ record.Borrow_ID }}
+                    </td>
+
+                    <td>
+                        {{ record.Student_Name }}
+                    </td>
+
+                    <td>
+                        {{ record.Book_Title }}
+                    </td>
+
+                    <td>
+                        {{ record.Issue_Date }}
+                    </td>
+
+                    <td>
+                        {{ record.Due_Date }}
+                    </td>
+
+                    <td>
+
+                        {% if record.Status == "Borrowed" %}
+
+                            <span class="status-borrowed">
+                                Borrowed
+                            </span>
+
+                        {% else %}
+
+                            <span class="status-returned">
+                                Returned
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+            {% else %}
+
+                <tr>
+
+                    <td
+                        colspan="6"
+                        class="empty-state"
+                    >
+                        No borrowing activity.
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

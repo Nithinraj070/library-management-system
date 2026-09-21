@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+
+{% block title %}
+Reservations
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <h1>
+        Book Reservations
+    </h1>
+
+</div>
+
+
+<div class="borrow-form-card">
+
+<form
+    method="POST"
+    class="book-form"
+>
+
+    <h2>
+        Reserve Unavailable Book
+    </h2>
+
+
+    <label>
+        Student
+    </label>
+
+    <select
+        name="student_id"
+        required
+    >
+
+        {% for student in students %}
+
+            <option
+                value="{{ student.Student_ID }}"
+            >
+
+                {{ student.Student_ID }}
+                -
+                {{ student.Name }}
+
+            </option>
+
+        {% endfor %}
+
+    </select>
+
+
+    <label>
+        Book
+    </label>
+
+    <select
+        name="book_id"
+        required
+    >
+
+        {% for book in unavailable_books %}
+
+            <option
+                value="{{ book.Book_ID }}"
+            >
+
+                {{ book.Book_ID }}
+                -
+                {{ book.Title }}
+
+            </option>
+
+        {% endfor %}
+
+    </select>
+
+
+    <button type="submit">
+        Reserve Book
+    </button>
+
+</form>
+
+</div>
+
+
+<div class="records-section">
+
+    <h2>
+        Reservation Records
+    </h2>
+
+
+    <div class="table-wrapper">
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>
+                    ID
+                </th>
+
+                <th>
+                    Student
+                </th>
+
+                <th>
+                    Book
+                </th>
+
+                <th>
+                    Reservation Date
+                </th>
+
+                <th>
+                    Status
+                </th>
+
+                <th>
+                    Action
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+        {% for record in reservation_records %}
+
+            <tr>
+
+                <td>
+                    {{ record.Reservation_ID }}
+                </td>
+
+                <td>
+                    {{ record.Student_Name }}
+                </td>
+
+                <td>
+                    {{ record.Book_Title }}
+                </td>
+
+                <td>
+                    {{ record.Reservation_Date }}
+                </td>
+
+                <td>
+
+                    {% if record.Status == "Waiting" %}
+
+                        <span class="status-borrowed">
+                            Waiting
+                        </span>
+
+                    {% elif record.Status == "Cancelled" %}
+
+                        <span class="unavailable">
+                            Cancelled
+                        </span>
+
+                    {% else %}
+
+                        <span class="status-returned">
+                            {{ record.Status }}
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+
+                    {% if record.Status == "Waiting" %}
+
+                        <form
+                            method="POST"
+                            action="{{ url_for(
+                                'cancel_reservation',
+                                reservation_id=record.Reservation_ID
+                            ) }}"
+                        >
+
+                            <button
+                                type="submit"
+                                class="return-button"
+                            >
+                                Cancel
+                            </button>
+
+                        </form>
+
+                    {% else %}
+
+                        -
+
+                    {% endif %}
+
+                </td>
+
+            </tr>
+
+        {% else %}
+
+            <tr>
+
+                <td
+                    colspan="6"
+                    class="empty-state"
+                >
+                    No reservations.
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

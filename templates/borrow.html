@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+
+{% block title %}
+Borrow & Return
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <h1>
+        Borrow & Return
+    </h1>
+
+</div>
+
+
+<div class="borrow-form-card">
+
+<form
+    method="POST"
+    class="book-form"
+>
+
+    <h2>
+        Issue Book
+    </h2>
+
+
+    <label>
+        Student
+    </label>
+
+    <select
+        name="student_id"
+        required
+    >
+
+        {% for student in students %}
+
+            <option
+                value="{{ student.Student_ID }}"
+            >
+
+                {{ student.Student_ID }}
+                -
+                {{ student.Name }}
+
+            </option>
+
+        {% endfor %}
+
+    </select>
+
+
+    <label>
+        Book
+    </label>
+
+    <select
+        name="book_id"
+        required
+    >
+
+        {% for book in books %}
+
+            <option
+                value="{{ book.Book_ID }}"
+            >
+
+                {{ book.Book_ID }}
+                -
+                {{ book.Title }}
+
+                (
+                {{ book.Available_Quantity }}
+                available
+                )
+
+            </option>
+
+        {% endfor %}
+
+    </select>
+
+
+    <label>
+        Librarian
+    </label>
+
+    <select
+        name="librarian_id"
+        required
+    >
+
+        {% for librarian in librarians %}
+
+            <option
+                value="{{ librarian.Librarian_ID }}"
+            >
+
+                {{ librarian.Librarian_ID }}
+                -
+                {{ librarian.Name }}
+
+            </option>
+
+        {% endfor %}
+
+    </select>
+
+
+    <label>
+        Due Date
+    </label>
+
+    <input
+        type="date"
+        name="due_date"
+        required
+    >
+
+
+    <button type="submit">
+        Issue Book
+    </button>
+
+</form>
+
+</div>
+
+
+<div class="records-section">
+
+    <h2>
+        Borrowing Records
+    </h2>
+
+
+    <div class="table-wrapper">
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>ID</th>
+                <th>Student</th>
+                <th>Book</th>
+                <th>Librarian</th>
+                <th>Issue Date</th>
+                <th>Due Date</th>
+                <th>Return Date</th>
+                <th>Status</th>
+                <th>Action</th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+        {% for record in borrow_records %}
+
+            <tr>
+
+                <td>
+                    {{ record.Borrow_ID }}
+                </td>
+
+                <td>
+                    {{ record.Student_Name }}
+                </td>
+
+                <td>
+                    {{ record.Book_Title }}
+                </td>
+
+                <td>
+                    {{ record.Librarian_Name }}
+                </td>
+
+                <td>
+                    {{ record.Issue_Date }}
+                </td>
+
+                <td>
+                    {{ record.Due_Date }}
+                </td>
+
+                <td>
+                    {{ record.Return_Date or "-" }}
+                </td>
+
+                <td>
+
+                    {% if record.Status == "Borrowed" %}
+
+                        <span class="status-borrowed">
+                            Borrowed
+                        </span>
+
+                    {% else %}
+
+                        <span class="status-returned">
+                            Returned
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+
+                    {% if record.Status == "Borrowed" %}
+
+                        <form
+                            method="POST"
+                            action="{{ url_for(
+                                'return_book',
+                                borrow_id=record.Borrow_ID
+                            ) }}"
+                        >
+
+                            <button
+                                type="submit"
+                                class="return-button"
+                            >
+                                Return
+                            </button>
+
+                        </form>
+
+                    {% else %}
+
+                        -
+
+                    {% endif %}
+
+                </td>
+
+            </tr>
+
+        {% else %}
+
+            <tr>
+
+                <td
+                    colspan="9"
+                    class="empty-state"
+                >
+                    No borrowing records.
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

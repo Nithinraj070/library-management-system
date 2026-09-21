@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}
+Member History
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h1>
+            {{ student.Name }}
+        </h1>
+
+        <p class="dashboard-intro">
+            {{ student.Student_ID }}
+            ·
+            {{ student.Department }}
+            ·
+            Year {{ student.Year }}
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="table-wrapper">
+
+<table>
+
+    <thead>
+
+        <tr>
+
+            <th>
+                Borrow ID
+            </th>
+
+            <th>
+                Book
+            </th>
+
+            <th>
+                Issue Date
+            </th>
+
+            <th>
+                Due Date
+            </th>
+
+            <th>
+                Return Date
+            </th>
+
+            <th>
+                Status
+            </th>
+
+        </tr>
+
+    </thead>
+
+
+    <tbody>
+
+    {% for record in history %}
+
+        <tr>
+
+            <td>
+                {{ record.Borrow_ID }}
+            </td>
+
+            <td>
+                {{ record.Book_Title }}
+            </td>
+
+            <td>
+                {{ record.Issue_Date }}
+            </td>
+
+            <td>
+                {{ record.Due_Date }}
+            </td>
+
+            <td>
+                {{ record.Return_Date or "-" }}
+            </td>
+
+            <td>
+
+                {% if record.Status == "Borrowed" %}
+
+                    <span class="status-borrowed">
+                        Borrowed
+                    </span>
+
+                {% else %}
+
+                    <span class="status-returned">
+                        Returned
+                    </span>
+
+                {% endif %}
+
+            </td>
+
+        </tr>
+
+    {% else %}
+
+        <tr>
+
+            <td
+                colspan="6"
+                class="empty-state"
+            >
+                No borrowing history.
+            </td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

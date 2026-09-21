@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add Member
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <h1>
+        Add Member
+    </h1>
+
+</div>
+
+
+<form
+    method="POST"
+    class="book-form"
+>
+
+    <label>
+        Student ID
+    </label>
+
+    <input
+        type="number"
+        name="student_id"
+        required
+    >
+
+
+    <label>
+        Name
+    </label>
+
+    <input
+        type="text"
+        name="name"
+        required
+    >
+
+
+    <label>
+        Email
+    </label>
+
+    <input
+        type="email"
+        name="email"
+        required
+    >
+
+
+    <label>
+        Department
+    </label>
+
+    <input
+        type="text"
+        name="department"
+        required
+    >
+
+
+    <label>
+        Year
+    </label>
+
+    <input
+        type="number"
+        name="year"
+        min="1"
+        max="5"
+        required
+    >
+
+
+    <button type="submit">
+        Add Member
+    </button>
+
+</form>
+
+{% endblock %}

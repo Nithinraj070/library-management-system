@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block title %}
+Books
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <h1>
+        Book Management
+    </h1>
+
+    <a
+        class="button"
+        href="{{ url_for('add_book') }}"
+    >
+        + Add Book
+    </a>
+
+</div>
+
+
+<form
+    class="search-form"
+    method="GET"
+>
+
+    <input
+        type="text"
+        name="search"
+        placeholder="Search title, author, category, publisher or ISBN"
+        value="{{ search }}"
+    >
+
+
+    <select name="category">
+
+        <option value="">
+            All Categories
+        </option>
+
+        {% for category in categories %}
+
+            <option
+                value="{{ category.Category }}"
+                {% if selected_category == category.Category %}
+                selected
+                {% endif %}
+            >
+
+                {{ category.Category }}
+
+            </option>
+
+        {% endfor %}
+
+    </select>
+
+
+    <select name="availability">
+
+        <option value="">
+            All Books
+        </option>
+
+        <option
+            value="available"
+            {% if availability == "available" %}
+            selected
+            {% endif %}
+        >
+            Available
+        </option>
+
+        <option
+            value="unavailable"
+            {% if availability == "unavailable" %}
+            selected
+            {% endif %}
+        >
+            Unavailable
+        </option>
+
+    </select>
+
+
+    <button type="submit">
+        Search
+    </button>
+
+</form>
+
+
+<div class="table-wrapper">
+
+<table>
+
+    <thead>
+
+        <tr>
+
+            <th>ID</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Category</th>
+            <th>Quantity</th>
+            <th>Available</th>
+            <th>Actions</th>
+
+        </tr>
+
+    </thead>
+
+
+    <tbody>
+
+    {% for book in books %}
+
+        <tr>
+
+            <td>
+                {{ book.Book_ID }}
+            </td>
+
+            <td>
+                {{ book.Title }}
+            </td>
+
+            <td>
+                {{ book.Author }}
+            </td>
+
+            <td>
+                {{ book.Category }}
+            </td>
+
+            <td>
+                {{ book.Quantity }}
+            </td>
+
+            <td>
+
+                {% if book.Available_Quantity > 0 %}
+
+                    <span class="available">
+                        {{ book.Available_Quantity }}
+                    </span>
+
+                {% else %}
+
+                    <span class="unavailable">
+                        0
+                    </span>
+
+                {% endif %}
+
+            </td>
+
+            <td>
+
+                <a
+                    class="table-action"
+                    href="{{ url_for(
+                        'edit_book',
+                        book_id=book.Book_ID
+                    ) }}"
+                >
+                    Edit
+                </a>
+
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'delete_book',
+                        book_id=book.Book_ID
+                    ) }}"
+                    class="inline-form"
+                >
+
+                    <button
+                        type="submit"
+                        onclick="
+                            return confirm(
+                                'Delete this book?'
+                            )
+                        "
+                    >
+                        Delete
+                    </button>
+
+                </form>
+
+            </td>
+
+        </tr>
+
+    {% else %}
+
+        <tr>
+
+            <td
+                colspan="7"
+                class="empty-state"
+            >
+                No books found.
+            </td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

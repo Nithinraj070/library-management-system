@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}
+Members
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <h1>
+        Member Management
+    </h1>
+
+    <a
+        class="button"
+        href="{{ url_for('add_member') }}"
+    >
+        + Add Member
+    </a>
+
+</div>
+
+
+<form
+    class="search-form"
+    method="GET"
+>
+
+    <input
+        type="text"
+        name="search"
+        placeholder="Search by name, email or department"
+        value="{{ search }}"
+    >
+
+    <button type="submit">
+        Search
+    </button>
+
+</form>
+
+
+<div class="table-wrapper">
+
+<table>
+
+    <thead>
+
+        <tr>
+
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Department</th>
+            <th>Year</th>
+            <th>Active Borrows</th>
+            <th>History</th>
+
+        </tr>
+
+    </thead>
+
+
+    <tbody>
+
+    {% for member in members %}
+
+        <tr>
+
+            <td>
+                {{ member.Student_ID }}
+            </td>
+
+            <td>
+                {{ member.Name }}
+            </td>
+
+            <td>
+                {{ member.Email }}
+            </td>
+
+            <td>
+                {{ member.Department }}
+            </td>
+
+            <td>
+                {{ member.Year }}
+            </td>
+
+            <td>
+                {{ member.Active_Borrows }}
+            </td>
+
+            <td>
+
+                <a
+                    class="table-action"
+                    href="{{ url_for(
+                        'member_history',
+                        student_id=member.Student_ID
+                    ) }}"
+                >
+                    View History
+                </a>
+
+            </td>
+
+        </tr>
+
+    {% else %}
+
+        <tr>
+
+            <td
+                colspan="7"
+                class="empty-state"
+            >
+                No members found.
+            </td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

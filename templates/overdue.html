@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}
+Overdue Books
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h1>
+            Overdue Books
+        </h1>
+
+        <p class="dashboard-intro">
+            Fine calculation rate:
+            ₹{{ fine_per_day }}
+            per overdue day.
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="table-wrapper">
+
+<table>
+
+    <thead>
+
+        <tr>
+
+            <th>
+                Borrow ID
+            </th>
+
+            <th>
+                Student
+            </th>
+
+            <th>
+                Book
+            </th>
+
+            <th>
+                Due Date
+            </th>
+
+            <th>
+                Days Overdue
+            </th>
+
+            <th>
+                Estimated Fine
+            </th>
+
+        </tr>
+
+    </thead>
+
+
+    <tbody>
+
+    {% for record in overdue_records %}
+
+        <tr>
+
+            <td>
+                {{ record.Borrow_ID }}
+            </td>
+
+            <td>
+                {{ record.Student_Name }}
+            </td>
+
+            <td>
+                {{ record.Book_Title }}
+            </td>
+
+            <td>
+                {{ record.Due_Date }}
+            </td>
+
+            <td>
+                {{ record.Days_Overdue }}
+            </td>
+
+            <td>
+                ₹{{ record.Estimated_Fine }}
+            </td>
+
+        </tr>
+
+    {% else %}
+
+        <tr>
+
+            <td
+                colspan="6"
+                class="empty-state"
+            >
+                No overdue books.
+            </td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+</div>
+
+{% endblock %}
