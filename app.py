@@ -27,26 +27,26 @@ def home():
 
     cursor.execute("""
         SELECT COUNT(*) AS total_books
-        FROM Book
+        FROM book
     """)
     total_books = cursor.fetchone()["total_books"]
 
     cursor.execute("""
         SELECT COUNT(*) AS total_students
-        FROM Student
+        FROM student
     """)
     total_students = cursor.fetchone()["total_students"]
 
     cursor.execute("""
         SELECT COUNT(*) AS active_borrows
-        FROM Borrow
+        FROM borrow
         WHERE Status = 'Borrowed'
     """)
     active_borrows = cursor.fetchone()["active_borrows"]
 
     cursor.execute("""
         SELECT COUNT(*) AS overdue_count
-        FROM Borrow
+        FROM borrow
         WHERE Status = 'Borrowed'
           AND Due_Date < CURDATE()
     """)
@@ -60,10 +60,10 @@ def home():
             br.Issue_Date,
             br.Due_Date,
             br.Status
-        FROM Borrow br
-        JOIN Student s
+        FROM borrow br
+        JOIN student s
             ON br.Student_ID = s.Student_ID
-        JOIN Book b
+        JOIN book b
             ON br.Book_ID = b.Book_ID
         ORDER BY br.Borrow_ID DESC
         LIMIT 5
@@ -144,7 +144,7 @@ def books():
 
     query = """
         SELECT *
-        FROM Book
+        FROM book
     """
 
     if conditions:
@@ -168,7 +168,7 @@ def books():
 
     cursor.execute("""
         SELECT DISTINCT Category
-        FROM Book
+        FROM book
         WHERE Category IS NOT NULL
           AND Category <> ''
         ORDER BY Category
@@ -222,7 +222,7 @@ def add_book():
         cursor = connection.cursor()
 
         cursor.execute("""
-            INSERT INTO Book
+            INSERT INTO book
             (
                 Book_ID,
                 Title,
@@ -316,7 +316,7 @@ def edit_book(book_id):
             SELECT
                 Quantity,
                 Available_Quantity
-            FROM Book
+            FROM book
             WHERE Book_ID = %s
         """, (book_id,))
 
@@ -329,7 +329,7 @@ def edit_book(book_id):
                 cursor
             )
 
-            return "Book not found"
+            return "book not found"
 
         borrowed_count = (
             current_book["Quantity"]
@@ -358,7 +358,7 @@ def edit_book(book_id):
         )
 
         cursor.execute("""
-            UPDATE Book
+            UPDATE book
             SET
                 Title = %s,
                 Author = %s,
@@ -392,7 +392,7 @@ def edit_book(book_id):
 
     cursor.execute("""
         SELECT *
-        FROM Book
+        FROM book
         WHERE Book_ID = %s
     """, (book_id,))
 
@@ -405,7 +405,7 @@ def edit_book(book_id):
 
     if not book:
 
-        return "Book not found"
+        return "book not found"
 
     return render_template(
         "edit_book.html",
@@ -430,7 +430,7 @@ def delete_book(book_id):
 
     cursor.execute("""
         SELECT COUNT(*) AS borrow_count
-        FROM Borrow
+        FROM borrow
         WHERE Book_ID = %s
     """, (book_id,))
 
@@ -451,7 +451,7 @@ def delete_book(book_id):
         )
 
     cursor.execute("""
-        DELETE FROM Book
+        DELETE FROM book
         WHERE Book_ID = %s
     """, (book_id,))
 
@@ -503,9 +503,9 @@ def members():
                     END
                 ) AS Active_Borrows
 
-            FROM Student s
+            FROM student s
 
-            LEFT JOIN Borrow br
+            LEFT JOIN borrow br
                 ON s.Student_ID = br.Student_ID
 
             WHERE
@@ -544,9 +544,9 @@ def members():
                     END
                 ) AS Active_Borrows
 
-            FROM Student s
+            FROM student s
 
-            LEFT JOIN Borrow br
+            LEFT JOIN borrow br
                 ON s.Student_ID = br.Student_ID
 
             GROUP BY
@@ -609,7 +609,7 @@ def add_member():
         cursor = connection.cursor()
 
         cursor.execute("""
-            INSERT INTO Student
+            INSERT INTO student
             (
                 Student_ID,
                 Name,
@@ -661,7 +661,7 @@ def member_history(student_id):
 
     cursor.execute("""
         SELECT *
-        FROM Student
+        FROM student
         WHERE Student_ID = %s
     """, (student_id,))
 
@@ -674,7 +674,7 @@ def member_history(student_id):
             cursor
         )
 
-        return "Student not found"
+        return "student not found"
 
     cursor.execute("""
         SELECT
@@ -685,9 +685,9 @@ def member_history(student_id):
             br.Return_Date,
             br.Status
 
-        FROM Borrow br
+        FROM borrow br
 
-        JOIN Book b
+        JOIN book b
             ON br.Book_ID = b.Book_ID
 
         WHERE br.Student_ID = %s
@@ -745,7 +745,7 @@ def borrow():
         cursor.execute("""
             SELECT
                 Available_Quantity
-            FROM Book
+            FROM book
             WHERE Book_ID = %s
         """, (book_id,))
 
@@ -758,7 +758,7 @@ def borrow():
                 cursor
             )
 
-            return "Book not found"
+            return "book not found"
 
         if book[
             "Available_Quantity"
@@ -769,7 +769,7 @@ def borrow():
                 cursor
             )
 
-            return "Book is currently unavailable"
+            return "book is currently unavailable"
 
         cursor.execute("""
             SELECT
@@ -777,7 +777,7 @@ def borrow():
                     MAX(Borrow_ID),
                     0
                 ) + 1 AS next_id
-            FROM Borrow
+            FROM borrow
         """)
 
         borrow_id = cursor.fetchone()[
@@ -785,7 +785,7 @@ def borrow():
         ]
 
         cursor.execute("""
-            INSERT INTO Borrow
+            INSERT INTO borrow
             (
                 Borrow_ID,
                 Student_ID,
@@ -810,7 +810,7 @@ def borrow():
         ))
 
         cursor.execute("""
-            UPDATE Book
+            UPDATE book
             SET
                 Available_Quantity =
                 Available_Quantity - 1
@@ -830,7 +830,7 @@ def borrow():
 
     cursor.execute("""
         SELECT *
-        FROM Student
+        FROM student
         ORDER BY Student_ID
     """)
 
@@ -838,7 +838,7 @@ def borrow():
 
     cursor.execute("""
         SELECT *
-        FROM Book
+        FROM book
         WHERE Available_Quantity > 0
         ORDER BY Book_ID
     """)
@@ -847,7 +847,7 @@ def borrow():
 
     cursor.execute("""
         SELECT *
-        FROM Librarian
+        FROM librarian
         ORDER BY Librarian_ID
     """)
 
@@ -864,15 +864,15 @@ def borrow():
             br.Return_Date,
             br.Status
 
-        FROM Borrow br
+        FROM borrow br
 
-        JOIN Student s
+        JOIN student s
             ON br.Student_ID = s.Student_ID
 
-        JOIN Book b
+        JOIN book b
             ON br.Book_ID = b.Book_ID
 
-        JOIN Librarian l
+        JOIN librarian l
             ON br.Librarian_ID = l.Librarian_ID
 
         ORDER BY br.Borrow_ID DESC
@@ -914,7 +914,7 @@ def return_book(borrow_id):
             Book_ID,
             Due_Date
 
-        FROM Borrow
+        FROM borrow
 
         WHERE Borrow_ID = %s
           AND Status = 'Borrowed'
@@ -930,7 +930,7 @@ def return_book(borrow_id):
         )
 
         return (
-            "Borrow record not found "
+            "borrow record not found "
             "or book already returned."
         )
 
@@ -953,7 +953,7 @@ def return_book(borrow_id):
     )
 
     cursor.execute("""
-        UPDATE Borrow
+        UPDATE borrow
         SET
             Return_Date = %s,
             Status = 'Returned'
@@ -965,7 +965,7 @@ def return_book(borrow_id):
     ))
 
     cursor.execute("""
-        UPDATE Book
+        UPDATE book
         SET
             Available_Quantity =
             Available_Quantity + 1
@@ -976,7 +976,7 @@ def return_book(borrow_id):
     if fine_amount > 0:
 
         cursor.execute("""
-            INSERT INTO Fine
+            INSERT INTO fine
             (
                 Borrow_ID,
                 Amount,
@@ -1034,12 +1034,12 @@ def overdue():
                 br.Due_Date
             ) * %s AS Estimated_Fine
 
-        FROM Borrow br
+        FROM borrow br
 
-        JOIN Student s
+        JOIN student s
             ON br.Student_ID = s.Student_ID
 
-        JOIN Book b
+        JOIN book b
             ON br.Book_ID = b.Book_ID
 
         WHERE
@@ -1084,15 +1084,15 @@ def fines():
             f.Amount,
             f.Paid_Status
 
-        FROM Fine f
+        FROM fine f
 
-        JOIN Borrow br
+        JOIN borrow br
             ON f.Borrow_ID = br.Borrow_ID
 
-        JOIN Student s
+        JOIN student s
             ON br.Student_ID = s.Student_ID
 
-        JOIN Book b
+        JOIN book b
             ON br.Book_ID = b.Book_ID
 
         ORDER BY f.Fine_ID DESC
@@ -1121,7 +1121,7 @@ def pay_fine(fine_id):
     cursor = connection.cursor()
 
     cursor.execute("""
-        UPDATE Fine
+        UPDATE fine
         SET Paid_Status = 'Paid'
         WHERE Fine_ID = %s
     """, (fine_id,))
@@ -1166,7 +1166,7 @@ def reservations():
         cursor.execute("""
             SELECT
                 Available_Quantity
-            FROM Book
+            FROM book
             WHERE Book_ID = %s
         """, (book_id,))
 
@@ -1179,7 +1179,7 @@ def reservations():
                 cursor
             )
 
-            return "Book not found"
+            return "book not found"
 
         if book[
             "Available_Quantity"
@@ -1192,12 +1192,12 @@ def reservations():
 
             return (
                 "This book is currently available. "
-                "Reservation is not required."
+                "librarian is not required."
             )
 
         cursor.execute("""
             SELECT COUNT(*) AS existing
-            FROM Reservation
+            FROM librarian
 
             WHERE Student_ID = %s
               AND Book_ID = %s
@@ -1220,11 +1220,11 @@ def reservations():
 
             return (
                 "You already have an active "
-                "reservation for this book."
+                "librarian for this book."
             )
 
         cursor.execute("""
-            INSERT INTO Reservation
+            INSERT INTO librarian
             (
                 Student_ID,
                 Book_ID,
@@ -1257,7 +1257,7 @@ def reservations():
 
     cursor.execute("""
         SELECT *
-        FROM Student
+        FROM student
         ORDER BY Student_ID
     """)
 
@@ -1265,7 +1265,7 @@ def reservations():
 
     cursor.execute("""
         SELECT *
-        FROM Book
+        FROM book
         WHERE Available_Quantity = 0
         ORDER BY Book_ID
     """)
@@ -1280,12 +1280,12 @@ def reservations():
             r.Reservation_Date,
             r.Status
 
-        FROM Reservation r
+        FROM librarian r
 
-        JOIN Student s
+        JOIN student s
             ON r.Student_ID = s.Student_ID
 
-        JOIN Book b
+        JOIN book b
             ON r.Book_ID = b.Book_ID
 
         ORDER BY r.Reservation_ID DESC
@@ -1316,7 +1316,7 @@ def cancel_reservation(reservation_id):
     cursor = connection.cursor()
 
     cursor.execute("""
-        UPDATE Reservation
+        UPDATE librarian
 
         SET Status = 'Cancelled'
 
